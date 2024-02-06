@@ -18,12 +18,10 @@ setwd("/home/dcschroe/heske011/projects/BLUEBERRY/POPULATION_ABUNDANCE")
 
 ############################################################################################################################
 ############################################################################################################################
-############################################################################################################################
 
 metadata.df <- read.csv("data/ApisM_MM_metadata.csv")
 idxstats.df <- read.csv("data/ApisM_MM_viral-genome-read-recruitment.csv"))
 
-############################################################################################################################
 ############################################################################################################################
 ############################################################################################################################
 
@@ -38,9 +36,8 @@ cumulatively.normalise.reads.mat <- idxstats.df %>% select(genomeID, cumulativel
 ############################################################################################################
 ############################################################################################################
 
-p1 <- merged.norm.df %>% 
-  subset(superkingdom != "Bacteria" & superkingdom != "" & superkingdom != "Eukaryota") %>%
-  ggplot() + geom_bar(aes(x = sequencingBC, y = cumNorm, fill= Variant),
+p1 <- metadata.df %>% 
+  ggplot() + geom_bar(aes(x = libraryID, y = cumulatively.normalise.reads, fill= Variant),
                       position="fill", stat="identity") +
   scale_fill_manual(values = c("#161565","#6a3d9a","#d53e4f", "#3288bd","#66c2a5","#fdae61",
                                "#fdae61","#fdae61","#fdae61","#fdae61","#f46d43")) +
@@ -77,28 +74,28 @@ aves.merged2 <- merged.df %>% group_by(Foraging, EFB_status, Variant) %>%
             medianCumNorm = median(cumNorm),
             sdCumNorm = sd(cumNorm)) %>% ungroup()
 
-rank_abundance <- function(foraging, efb){
-  ggplot(subset(aves.merged2,  
-                Foraging == foraging &  
-                  EFB_status == efb),
-       aes( x = fct_reorder(Variant, meanCumNorm),
-            y = meanCumNorm, color = Variant )) +
-  geom_point(size = 2) +
-  scale_color_manual(values = c("#161565","#6a3d9a","#d53e4f", "#3288bd","#66c2a5",
-                               "#fdae61","#fdae61","#fdae61","#fdae61","#fdae61","#f46d43")) +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-    theme(legend.position = "none",
-          axis.title.x=element_blank(),
-          ) +
-  scale_y_continuous(name="", 
+rank_abundance_plot <- function(foraging, efb){
+              ggplot(subset(aves.merged2,  
+                      Foraging == foraging &  
+                      EFB_status == efb),
+             aes( x = fct_reorder(Variant, meanCumNorm),
+                  y = meanCumNorm, color = Variant )) +
+            geom_point(size = 2) +
+            scale_color_manual(values = c("#161565","#6a3d9a","#d53e4f", "#3288bd",
+                                          "#66c2a5","#fdae61","#fdae61","#fdae61",
+                                          "#fdae61","#fdae61","#f46d43")) +
+            theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+            theme(legend.position = "none",
+            axis.title.x=element_blank(),
+            ) +
+            scale_y_continuous(name="", 
                      trans = "log10", limits = c(1,1.2e5))
-
 }
 
-p2a <- rank_abundance(foraging = "Blueberry", efb = "Negative")
-p2b <- rank_abundance(foraging = "Blueberry", efb = "Positive")
-p2c <- rank_abundance(foraging = "Holding", efb = "Negative")
-p2d <- rank_abundance(foraging = "Holding", efb = "Positive")
+p2a <- rank_abundance_plot(foraging = "Blueberry", efb = "Negative")
+p2b <- rank_abundance_plot(foraging = "Blueberry", efb = "Positive")
+p2c <- rank_abundance_plot(foraging = "Holding", efb = "Negative")
+p2d <- rank_abundance_plot(foraging = "Holding", efb = "Positive")
 
 p2 <- (p2a + p2b) / (p2c + p2d)
 p2
