@@ -1,4 +1,4 @@
-chr,genomeID,libraryID,chr.length,mapped.reads,cumilatively.normalise.reads,total.reads,EFB,Yard,taxID,CommonName,Variant,superkingdom,phylum,order,class,family,genus,species
+chr,genomeID,libraryID,chr.length,mapped.reads,cumulatively.normalise.reads,total.reads,EFB,Yard,taxID,CommonName,Variant,superkingdom,phylum,order,class,family,genus,species
 contig_Blueberry_H07_000000000003,BB_H07_000003,ApisM_MM__10_26_2021_barcode01,10074,363,12100,202968,Negative,Yard B,198112,Deformed Wing Virus,DWV A,Viruses, Pisuviricota, Picornavirales, Pisoniviricetes,Iflaviridae,Iflavirus,Iflavirus aladeformis
 contig_Blueberry_H07_000000000003,BB_H07_000003,ApisM_MM__10_26_2021_barcode02,10074,36,765.9574468,201466,Negative,Yard B,198112,Deformed Wing Virus,DWV A,Viruses, Pisuviricota, Picornavirales, Pisoniviricetes,Iflaviridae,Iflavirus,Iflavirus aladeformis
 contig_Blueberry_H07_000000000003,BB_H07_000003,ApisM_MM__10_26_2021_barcode03,10074,8,1142.857143,191616,Negative,Yard B,198112,Deformed Wing Virus,DWV A,Viruses, Pisuviricota, Picornavirales, Pisoniviricetes,Iflaviridae,Iflavirus,Iflavirus aladeformis
