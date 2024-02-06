@@ -20,36 +20,8 @@ setwd("/home/dcschroe/heske011/projects/BLUEBERRY/POPULATION_ABUNDANCE")
 ############################################################################################################################
 ############################################################################################################################
 
-metadata.df <- read.csv("data/")
-idxstats.df <- read.csv("data/", 
-                            header=FALSE, sep="\t", col.names=c("sequencingBC","datatype", "chr", "locus", "numReads", "totalReads"))
-merged.df <- merge(idxstats.df, metadata.df, by = "sequencingBC")
-taxonomy.df <- read.delim("data/", 
-                       header = F, sep = "\t", 
-                       col.names=c("classification", "chr", "taxID",
-                                   "lineage","V5","V6","V7","V8","V9","V10",
-                                   "V11", "V12", "V13"))
-
-drop <- c("V5","V6","V7","V8","V9","V10","V11", "V12", "V13", "classification")
-taxonomy.df = taxonomy.df[,!(names(taxonomy.df) %in% drop)]
-taxonomy.df <- separate_wider_delim(taxonomy.df, cols = lineage, delim = ";", 
-                                    names = c("superkingdom","phylum","order","class","family","genus","species","V8"),
-                                    too_many = "merge", too_few = "align_start")
-taxonomy.df <- subset(taxonomy.df, select = -c(V8) )
-taxonomy.df$species <- trimws(taxonomy.df$species, which = "left")
-taxonomy.df$genus <- trimws(taxonomy.df$genus, which = "left")
-taxonomy.df$family <- trimws(taxonomy.df$family, which = "left")
-
-merged.df <- merge(merged.df, taxonomy.df, by = "chr")
-
-
-head(merged.df)
-colnames(merged.df)
-
-contig.meta.df <- read_sheet("https://docs.google.com/spreadsheets/d/15VMY_-fpY6yf4PCuAu02WDB94lU6K6stdS30o4IvMjI/edit?usp=sharing")
-head(contig.meta.df)
-
-merged.df <- merge(merged.df, contig.meta.df, by = "chr")
+metadata.df <- read.csv("data/ApisM_MM_metadata.csv")
+idxstats.df <- read.csv("data/ApisM_MM_viral-genome-read-recruitment.csv"))
 
 ############################################################################################################################
 ############################################################################################################################
@@ -57,33 +29,11 @@ merged.df <- merge(merged.df, contig.meta.df, by = "chr")
 
 # Plot cumSum normalised data heatmap
 
-counts.mat <- merged.df %>% select(chr, numReads, sequencingBC) %>% subset(chr != "*") %>%
-  pivot_wider(names_from = sequencingBC, values_from = numReads) %>%
-  ungroup() %>% remove_rownames %>% column_to_rownames(var="chr") %>% as.matrix()
-#MetagenomeSeq cumalitive normalisation
-Coverage.MR <- newMRexperiment(counts.mat)
-p <- cumNormStat(Coverage.MR, pFlag=TRUE)
-Coverage.MR <- cumNorm(Coverage.MR, p=p)
-normFactors(Coverage.MR)
-Coverage.norm <- MRcounts(Coverage.MR, norm=T, log=F)
-library(reshape2)
-cumNorm.df <- as.data.frame(as.table(Coverage.norm))
-colnames(cumNorm.df) <- c("chr", "sequencingBC", "cumNorm")
-
-merged.norm.df <- merge(merged.df, cumNorm.df,
-                                       by.x = c("chr", "sequencingBC"), 
-                                       by.y = c("chr", "sequencingBC"), all.x = TRUE)
-
-write.csv(merged.norm.df, "merged.norm.df.csv")
-colour.man <- list(
-                   Organism = c("Deformed Wing Virus A","Deformed Wing Virus B","Deformed Wing Virus",
-                                "Lake Sinai Virus","Israel Acute Paralysis Virus","Black Queen Cell Virus",
-                                "Sacbrood Virus"),
-                   value = c("#d53e4f", "#3288bd", "#6a3d9a", "#66c2a5", "#abdda4", "#B2BEB5", "#fdae61"))
-unique(merged.norm.df$Organism)
-
-
-read.recruitment.summary <- merged.norm.df %>% group_by(sequencingBC, Variant) %>% summarise(meanCumNorm = mean(cumNorm))
+cumulatively.normalise.reads.mat <- idxstats.df %>% select(genomeID, cumulatively.normalise.reads, libraryID) %>%
+                                    pivot_wider(names_from = libraryID, values_from = cumulatively.normalise.reads) %>%
+                                    ungroup() %>% 
+                                    remove_rownames %>% column_to_rownames(var="genomeID") %>% 
+                                    as.matrix()
 
 ############################################################################################################
 ############################################################################################################
