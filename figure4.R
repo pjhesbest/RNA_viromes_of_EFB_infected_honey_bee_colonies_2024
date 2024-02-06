@@ -25,17 +25,6 @@ idxstats.df <- read.csv("data/ApisM_MM_viral-genome-read-recruitment.csv"))
 ############################################################################################################################
 ############################################################################################################################
 
-# Plot cumSum normalised data heatmap
-
-cumulatively.normalise.reads.mat <- idxstats.df %>% select(genomeID, cumulatively.normalise.reads, libraryID) %>%
-                                    pivot_wider(names_from = libraryID, values_from = cumulatively.normalise.reads) %>%
-                                    ungroup() %>% 
-                                    remove_rownames %>% column_to_rownames(var="genomeID") %>% 
-                                    as.matrix()
-
-############################################################################################################
-############################################################################################################
-
 p1 <- metadata.df %>% 
   ggplot() + geom_bar(aes(x = libraryID, y = cumulatively.normalise.reads, fill= Variant),
                       position="fill", stat="identity") +
@@ -118,26 +107,29 @@ p2
 ############################################################################################################
 ############################################################################################################
 
-colnames(merged.df)
-merged.mat <- merged.df %>% 
-  select(sequencingBC, chr, cumNorm) %>% 
-  pivot_wider(names_from = chr, values_from = cumNorm) %>%
-  remove_rownames %>% column_to_rownames(var="sequencingBC") %>%
-  ungroup() %>% as.matrix()
+cumulatively.normalise.reads.mat <- idxstats.df %>% select(genomeID, cumulatively.normalise.reads, libraryID) %>%
+                                    pivot_wider(names_from = libraryID, values_from = cumulatively.normalise.reads) %>%
+                                    ungroup() %>% 
+                                    remove_rownames %>% column_to_rownames(var="genomeID") %>% 
+                                    as.matrix()
 
-community.mds <- vegan::metaMDS(comm = merged.mat, 
+community.mds <- vegan::metaMDS(comm = cumulatively.normalise.reads.mat, 
                                 distance = "bray", 
                                 trace = FALSE, autotransform = FALSE)
 plot(community.mds$points)
 MDS_xy <- data.frame(community.mds$points)
 MDS_xy.df <- merge(MDS_xy, metadata.df, by.x = 0, by.y = "sequencingBC", all.x = TRUE)  # Merge by row names
 
-p3 <- ggplot(MDS_xy.df, aes(x = MDS1, y = MDS2, color = EFB_status, shape = Foraging)) +
-  geom_point(aes(size = bctrimmedreads)) + 
-  theme_bw() + #theme(legend.position = "none") +
-  scale_color_manual(values = c("#719400ff","#800000ff")) # Customize the plot appearance as desired
+p3 <- ggplot(MDS_xy.df, 
+             aes(x = MDS1, 
+                 y = MDS2, 
+                 color = EFB_status, 
+                 shape = Foraging)) +
+              geom_point(aes(size = bctrimmedreads)) + 
+              theme_bw() + #theme(legend.position = "none")
+              scale_color_manual(values = c("#719400ff","#800000ff")) # Customize the plot appearance as desired
 
-community.mds$stress
+community.mds$stress #stress value = 
 
 metadata.df2 <- metadata.df %>% remove_rownames %>% column_to_rownames(var="sequencingBC")
 
