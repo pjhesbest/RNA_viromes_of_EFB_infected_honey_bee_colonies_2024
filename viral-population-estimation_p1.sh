@@ -177,8 +177,8 @@ awk '{print $0"\t0\tNA\tNA\tNA\tNA"}' population.pool.kaiju.*.names | cut -f 1-8
 ##################################################################################
 ##################################################################################
 
-    # Rune the R script that outputs all the final tables
+    # Run the R script that outputs all the final tables
 
 mkdir tables
 
-Rscript /home/dcschroe/heske011/codebase/population_estimations.R
+Rscript viral-population-estimations_pt2.R
