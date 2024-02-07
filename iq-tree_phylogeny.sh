@@ -1,20 +1,15 @@
 #!/bin/bash
-#SBATCH --time=96:00:00
-#SBATCH --cpus-per-task=24
-#SBATCH --mem=150GB
-#SBATCH --partition ag2tb
-#SBATCH -o slurm.%N.%j.out
-#SBATCH -e slurm.%N.%j.err
 
-eval "$(conda shell.bash hook)"
-
-conda activate phylogeny
-
+# Requirements:
+# IQ-tree http://www.iqtree.org/
+# MAFFT https://mafft.cbrc.jp/alignment/software/
+# trimAL http://trimal.cgenomics.org/
 
 echo -e "\e[34mCOMMAND LINE JOB SUBMISSSION:\n\tbash iq-tree_phylogeny.sh$
 
 Help()  
 {
+echo -e "This script is to perform the following:\n\t\t\t(1) Multiple sequence alignment with MAFFT\n\t\t\t(2) Trim alignment using TrimAL\n\t\t\t(3) Phylogenetic reconstruction with IQ-TREE\n"
 echo -e "-i, --input\t/full/path/to/file.fasta for MSA and phylogeny \e[31m[Required]\e[0m"
 echo -e "-b, --bootstraps\tNumber of boottraps for tree \e[31m[Default: -b 200 ]\e[0m"
 echo -e "-R, --Retree\tRerun only the tree using existing alignment \e[31m[Optional]\e[0m"
