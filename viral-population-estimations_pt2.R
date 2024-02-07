@@ -12,19 +12,20 @@ theme_set(theme_minimal(base_size = 10, base_family = 'Source Sans Pro'))
 
 set.seed(1234)
 
-#########################
+##################################################################################
+##################################################################################
+
 # Import text files
-#########################
-# Read idxstats file as TSV
+	# Read idxstats file as TSV
 idxstats.df <- read.delim("mapping.idxstats.tsv", 
                           header = F, sep = "\t",
                           col.names=c("sequencingBC", "datatype", "chr", "length", "counts", "totalReads"),) %>% subset(chr != "*")
-# Read depth file as TSV - this file tends to be too big
+	# Read depth file as TSV - this file tends to be too big
 depth.df <- read.delim("mapping.depth.tsv", 
                        header = F, sep = "\t", 
                        col.names=c("sequencingBC", "datatype", "chr", "locus", "counts", "totalReads"))
 
-# Read taxonomy file as TSV
+	# Read taxonomy file as TSV
 taxonomy.df <- read.delim("population.pool.kaiju.merge", 
                           header = F, sep = "\t", 
                           col.names=c("classification", "chr", "taxID",
@@ -37,7 +38,7 @@ taxonomy.df <- separate_wider_delim(taxonomy.df, cols = lineage, delim = ";",
                      too_many = "merge", too_few = "align_start")
 taxonomy.df <- subset(taxonomy.df, select = -c(V8) )
 
-# Ensure values are numeric:
+	# Ensure values are numeric:
 idxstats.df$length <- as.numeric(idxstats.df$length)
 idxstats.df$counts <- as.numeric(idxstats.df$counts)
 idxstats.df$totalReads <- as.numeric(idxstats.df$totalReads)
@@ -45,8 +46,10 @@ depth.df$locus <- as.numeric(depth.df$locus)
 depth.df$counts <- as.numeric(depth.df$counts)
 depth.df$totalReads <- as.numeric(depth.df$totalReads)
 
-#########################
-# Calculate different abundance metrics
+##################################################################################
+##################################################################################
+
+	# Calculate different abundance metrics
 idxstats.df$normalised <- with(idxstats.df, ((counts)/(totalReads))/length)
 idxstats.df$RPKM <- with(idxstats.df, (counts)/((length/1e3) * (totalReads/1e6)))
 idxstats.df$Cov <- with(idxstats.df, ((counts * 200)/length))
@@ -76,7 +79,10 @@ depth.min.df <- depth.df %>%
             maxCov_per_bp = max(Cov_per_bp),
             Cov = mean(Cov),)
 
-#MetagenomeSeq cumalitive normalisation
+##################################################################################
+##################################################################################
+
+	#MetagenomeSeq cumalitive normalisation
 Coverage.MR <- newMRexperiment(counts.mat)
 p <- cumNormStat(Coverage.MR, pFlag=TRUE)
 Coverage.MR <- cumNorm(Coverage.MR, p=p)
@@ -86,13 +92,19 @@ library(reshape2)
 cumNorm.df <- as.data.frame(as.table(Coverage.norm))
 colnames(cumNorm.df) <- c("chr", "sequencingBC", "cumNorm")
 
-# Add taxonomy to mapping tables and filter out idxstats to remove annoying * (i.e no. of unmapped reads)
+##################################################################################
+##################################################################################
+
+	# Add taxonomy to mapping tables and filter out idxstats to remove annoying * (i.e no. of unmapped reads)
 idxstats.df <- idxstats.df %>% subset(chr != "*")
 idxstats.df <- merge(idxstats.df, taxonomy.df, by= c("chr", "chr"))
 depth.df <- merge(depth.df, taxonomy.df, by= c("chr", "chr"))
 cumNorm.df <- merge(cumNorm.df, taxonomy.df, by= c("chr", "chr"))
 
-#export normalized tables
+##################################################################################
+##################################################################################
+
+	#export normalized tables
 write.csv(Coverage.norm, paste("tables/MGSeq_Read_counts.matrix.csv",sep=""),quote=F)
 write.csv(counts.mat, paste("tables/Read_counts.matrix.csv",sep=""),quote=F)
 write.csv(normalised.mat, paste("tables/Normalised_counts.matrix.csv",sep=""),quote=F)
@@ -103,7 +115,9 @@ write.csv(depth.min.df, paste("tables/mapping.depth.summary.csv", sep=""),quote=
 write.csv(depth.df, paste("tables/mapping.depth.merged.csv", sep=""), quote=F)
 write.csv(idxstats.df, paste("tables/mapping.idxstats.merged.csv", sep=""), quote=F)
 
-#######################################
+##################################################################################
+##################################################################################
+
 con <- read.csv("tmp.ALLcontig", header=TRUE, sep="\t")
 sam_con <- read.csv("tmp.ALLstats.list.count0", header=TRUE, sep="\t")
 head(bas_1)
