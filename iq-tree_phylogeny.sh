@@ -45,7 +45,7 @@ prefix=$(basename ${input} .gz | sed 's/\.fasta//g; s/\.fa//g; s/\.fq//g; s/\.fa
 ##################################################################################################
 ##################################################################################################
 
-    # Check if the input file has a .gz extension and unzip it if necessary
+	# Check if the input file has a .gz extension and unzip it if necessary
 if [[ "${input}" == *.gz ]]; then
   gunzip -c "${input}" >"${prefix}.fasta"
   input="${prefix}.fasta"
@@ -55,17 +55,17 @@ fi
 ##################################################################################################
 ##################################################################################################
 
-# Check if the -R flag is used to determine whether to run mafft and iqtree
+	# Check if the -R flag is used to determine whether to run mafft and iqtree
 if [[ -n "${retree}" ]]; then
   
   sed -i 's/>_R_/>/g' ${prefix}.aln.trim.fasta
-  iqtree -s "${prefix}.aln.fasta" -m GTR -T AUTO -ntmax "${SLURM_CPUS_PER_TASK}" -b "${bootstraps}" --prefix "${prefix}" -redo
+  iqtree -s "${prefix}.aln.fasta" -m GTR -T AUTO -ntmax "${threads}" -b "${bootstraps}" --prefix "${prefix}" -redo
 
 else
 	
   mafft --thread "${SLURM_CPUS_PER_TASK}" --adjustdirectionaccurately --auto "${input}" > "${prefix}.aln.fasta"
   trimal -in "${prefix}.aln.fasta" -out "${prefix}.aln.trim.fasta" -gt 0.9 -cons 60
   sed -i 's/>_R_/>/g' ${prefix}.aln.trim.fasta
-  iqtree -s "${prefix}.aln.trim.fasta" -m GTR -T AUTO -ntmax "${SLURM_CPUS_PER_TASK}" -b "${bootstraps}" --prefix "${prefix}" -redo
+  iqtree -s "${prefix}.aln.trim.fasta" -m GTR -T AUTO -ntmax "${threads}" -b "${bootstraps}" --prefix "${prefix}" -redo
 
 fi
