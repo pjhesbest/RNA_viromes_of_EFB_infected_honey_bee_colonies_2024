@@ -35,7 +35,7 @@ done
 
 if [[ -z "${input}" ]]; then echo "-i, --input REQUIRED"; Help; exit; fi
 if [[ -z "${prefix}" ]]; then 
-    prefix=$(basename ${input} .gz | sed 's/\.fasta//g; s/\.fastq//g; s/\.fq//g; s/\.fa//g; s/\.fq//g'); fi
+    prefix=$(basename ${input} .gz | sed 's/\.fasta\?//g; s/\.fastq\?//g; s/\.fa\?//g; s/\.fq\?//g'); fi
 if [[ -z "${reference}" ]]; then echo "-r, --reference REQUIRED"; Help; exit; fi
 if [[ -z "${min}" ]]; then min=200; fi
 if [[ -z "${threads}" ]]; then threads=4; fi
@@ -66,7 +66,7 @@ fi
 ##########################################################################################################################################
 
     # Modify the idxstats file to contains the prefix and remove suffix
-awk -v prefix="$prefix" '{print prefix "\t" $0}' ${prefix}.idxstats | sed 's/\.gz//g; s/\.fasta//g; s/\.fastq//g' > ${prefix}.idxstats.tmp1
+awk -v prefix="$prefix" '{print prefix "\t" $0}' ${prefix}.idxstats | sed 's/\.fasta\?//g; s/\.fastq\?//g; s/\.fa\?//g; s/\.fq\?//g' > ${prefix}.idxstats.tmp1
 awk '{print $1,$2,$3,$4}' ${prefix}.idxstats.tmp1 > ${prefix}.idxstats.tmp2
 	
 	# Filter out mapping with 0 reads mapped to contigs
@@ -75,7 +75,7 @@ awk '{print $1,$2,$3,$4}' ${prefix}.idxstats.tmp1 > ${prefix}.idxstats.tmp2
 awk -v totalReads="$totalReads" '{print $0 "\t" totalReads}' ${prefix}.idxstats.tmp2 > ${prefix}.idxstats.tmp3
 
 # Modify the depth file to contains the prefix and remove suffix
-awk -v prefix="$prefix" '{print prefix "\t" $0}' ${prefix}.depth | sed 's/\.gz//g; s/\.fasta//g; s/\.fastq//g' > ${prefix}.depth.tmp1
+awk -v prefix="$prefix" '{print prefix "\t" $0}' ${prefix}.depth | sed 's/\.fasta\?//g; s/\.fastq\?//g; s/\.fa\?//g; s/\.fq\?//g' > ${prefix}.depth.tmp1
 mv ${prefix}.depth.tmp1 ${prefix}.depth
 
 awk '{if ($4 > 0) print}' ${prefix}.idxstats.tmp3 > ${prefix}.idxstats.tmp4
