@@ -45,16 +45,16 @@ if [[ -z "${threads}" ]]; then threads=4; fi
 
 # Perform the mapping
 if [[ -z "${max}" ]]; then
-    seqkit seq --min-len ${min} ${input} | minimap2 -ax splice -uf -t $SLURM_CPUS_PER_TASK --secondary=no ${reference} - | samtools sort -O BAM -  > ${prefix}.bam #|samtools view -h -F 0x900
-    samtools index -@ $SLURM_CPUS_PER_TASK -b ${prefix}.bam
+    seqkit seq --min-len ${min} ${input} | minimap2 -ax splice -uf -t ${threads} --secondary=no ${reference} - | samtools sort -O BAM -  > ${prefix}.bam #|samtools view -h -F 0x900
+    samtools index -@ ${threads} -b ${prefix}.bam
     samtools idxstats ${prefix}.bam > ${prefix}.idxstats
 	samtools depth ${prefix}.bam > ${prefix}.depth
 
     totalReads=$(seqkit seq --min-len ${min} ${input} | seqkit stats -T - | awk '{print $4}' | sed '1d')
 
 elif [[ ! -z "${max}" ]]; then
-    seqkit seq --min-len $min --max-len $max ${input} | minimap2 -ax splice -uf -t $SLURM_CPUS_PER_TASK --secondary=no ${reference} - | samtools sort -O BAM - > ${prefix}.bam #|samtools view -h -F 0x900
-    samtools index -@ $SLURM_CPUS_PER_TASK -b ${prefix}.bam
+    seqkit seq --min-len $min --max-len $max ${input} | minimap2 -ax splice -uf -t ${threads} --secondary=no ${reference} - | samtools sort -O BAM - > ${prefix}.bam #|samtools view -h -F 0x900
+    samtools index -@ ${threads} -b ${prefix}.bam
     samtools idxstats ${prefix}.bam > ${prefix}.idxstats
 	samtools depth ${prefix}.bam > ${prefix}.depth
 
