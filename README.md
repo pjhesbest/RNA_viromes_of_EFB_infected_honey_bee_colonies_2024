@@ -4,3 +4,5 @@ Script and data files relating to the publication:
 #### Poppy J. Hesketh-Best<sup>1</sup>, Peter D. Fowler<sup>2</sup>, Nkechi M. Odogwu<sup>1</sup>, Meghan O.G. Milbrath<sup>2</sup>, Declan C. Schroeder<sup>1</sup>
 ##### <sup>1</sup>Department of Veterinary Population Medicine, University of Minnesota, St. Paul, MN 55108, USA
 ##### <sup>2</sup>Department of Entomology, Michigan State University, Pollinator Performance Center, 4090 N. College Road, RM 100, Lansing, MI 48910, USA
+
+The scripts here have been modified in an attempt to achieve general use, but there may be compatibility issues.
