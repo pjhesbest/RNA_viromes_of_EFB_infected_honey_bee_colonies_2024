@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Requirements:
+#	mafft https://mafft.cbrc.jp/alignment/software/
+#	cd-hit http://cd-hit.org/
+#	kaiju https://bioinformatics-centre.github.io/kaiju/
+#	seqkit https://bioinf.shenwei.me/seqkit/
+#	minimap2 https://github.com/lh3/minimap2
+#	samtools https://www.htslib.org/
+
+# To succesfully run this script you will be required to install the necessary databases. 
+# Follow instructions from the following repository to do so: https://github.com/dmckeow/bioinf
+
+##################################################################################################
+##################################################################################################
+
 echo -e "\e[34mCOMMAND LINE JOB SUBMISSSION to SLURM:\n\tsbatch /home/dcschroe/heske011/codebase/population_estimations.sh $@\e[0m"
 echo -e "\e[32m\nThis script performs the following:\n\n\t1. Filters out reads with a minimum (-m; default 200 bp) and maximum (-M) length\n\t2. Reference genome are clustered at ≥95% ANI across ≥80% of their lengths - viral genome 'population' pool.\n\t3. Filtered reads are mapped to viral genome 'population' pool.\n\t4. Secondary mapped reads are discarded, retaining only primary.\n\t4. Read counts are extracted from mapping file (BAM) three files generated - number of reads mapped ({prefix}.idxstats), sequencing depth ({prefix}.depth) and coverage ({prefix}.coverage)\n\e[0m\n"
 echo -e "Arguments:"
