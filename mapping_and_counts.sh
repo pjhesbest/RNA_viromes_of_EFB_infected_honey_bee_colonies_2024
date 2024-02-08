@@ -24,13 +24,14 @@ do
         r)reference=${OPTARG};;
         m)min=${OPTARG};;
         M)max=${OPTARG};;
+        t)threads=${OPTARG};;
     h)Help; exit;;
     esac
 done
 
 if [[ -z "${input}" ]]; then echo "-i, --input REQUIRED"; Help; exit; fi
 if [[ -z "${prefix}" ]]; then
-    prefix=$(basename ${input} .gz | sed 's/\.fasta//g; s/\.fastq//g; s/\.fq//g; s/\.fa//g; s/\.fq//g');$
+    prefix=$(basename ${input} .gz | sed 's/\.fasta\?//g; s/\.fastq\?//g; s/\.fa\?//g; s/\.fq\?//g');$
 if [[ -z "${reference}" ]]; then echo "-r, --reference REQUIRED"; Help; exit; fi
 if [[ -z "${min}" ]]; then min=200; fi
 
@@ -40,15 +41,15 @@ if [[ -z "${min}" ]]; then min=200; fi
 # Perform the mapping
 
 if [[ -z "${max}" ]]; then
-    seqkit seq --min-len ${min} ${input} | minimap2 -ax splice -uf -t $SLURM_CPUS_PER_TASK --secondary=n$
-    samtools index -@ $SLURM_CPUS_PER_TASK -b ${prefix}.bam
+    seqkit seq --min-len ${min} ${input} | minimap2 -ax splice -uf -t ${threads} --secondary=n$
+    samtools index -@ ${threads} -b ${prefix}.bam
     samtools idxstats ${prefix}.bam > ${prefix}.idxstats
         samtools depth ${prefix}.bam > ${prefix}.depth
 
     totalReads=$(seqkit seq --min-len ${min} ${input} | seqkit stats -T - | awk '{print $4}' | sed '1d')
 
 elif [[ ! -z "${max}" ]]; then
-    seqkit seq --min-len $min --max-len $max ${input} | minimap2 -ax splice -uf -t $SLURM_CPUS_PER_TASK $
+    seqkit seq --min-len $min --max-len $max ${input} | minimap2 -ax splice -uf -t ${threads} 
     samtools index -@ $SLURM_CPUS_PER_TASK -b ${prefix}.bam
     samtools idxstats ${prefix}.bam > ${prefix}.idxstats
         samtools depth ${prefix}.bam > ${prefix}.depth
