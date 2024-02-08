@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Requirements:
+#	seqkit https://bioinf.shenwei.me/seqkit/
+#	samtools https://www.htslib.org/
+# 	minimap2 https://github.com/lh3/minimap2
+
+##########################################################################################################################################
+##########################################################################################################################################
+
 echo -e "\e[34mCOMMAND LINE JOB SUBMISSSION:\n\tbash mapping_and_counts.sh$
 echo -e "\e[32m\nThis script performs the following:\n\n\t1. Filters out reads with a minimum (-m) and m$
 
