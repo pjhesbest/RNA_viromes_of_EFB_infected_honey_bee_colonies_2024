@@ -8,8 +8,9 @@
 ##########################################################################################################################################
 ##########################################################################################################################################
 
-echo -e "\e[34mCOMMAND LINE JOB SUBMISSSION:\n\tbash mapping_and_counts.sh$
-echo -e "\e[32m\nThis script performs the following:\n\n\t1. Filters out reads with a minimum (-m) and m$
+
+echo -e "\e[34mCOMMAND LINE JOB SUBMISSSION:\n\tbash mapping_and_counts.sh $@\e[0m"
+echo -e "\e[32m\nThis script performs the following:\n\n\t1. Filters out reads with a minimum (-m) and maximum (-M) length\n\t2. Filtered reads are mapped to reference (-r)\n\t3. Read counts are extracted from mapping file and contigs with no reads mapping are filtered out\n\e[0m\nArguments:"
 
 Help()
 {
