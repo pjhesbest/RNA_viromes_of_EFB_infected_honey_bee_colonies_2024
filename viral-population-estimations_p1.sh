@@ -24,18 +24,20 @@ echo -e "-i, --input\tFull path to directory containing assembly output (fasta/f
 echo -e "-r, --reference\treference file of viral genomes \e[31m[Required]\e[0m"
 echo -e "-m, --min\tMinimum read length for mapping [default: -m 200]"
 echo -e "-M, --max\tMaximum read length for mapping \e[31m[Optional]\e[0m\n"
+echo -e "-t, --threads\tNumber of threads \e[31m[Default: -t 4]\e[0m\n"
 }
 
 ##################################################################################
 ##################################################################################
 
-while getopts i:p:r:m:M:h option
+while getopts i:p:r:m:M:t:h option
 do 
     case "${option}" in
 		i)input=${OPTARG};;
         r)reference=${OPTARG};;
         m)min=${OPTARG};;
         M)max=${OPTARG};;
+	t)threads=${OPTARG};;
     h)Help; exit;;
     esac
 done
@@ -43,6 +45,7 @@ done
 if [[ -z "${input}" ]]; then echo "-i, --input REQUIRED"; Help; exit; fi
 if [[ -z "${reference}" ]]; then echo "-r, --reference REQUIRED"; Help; exit; fi
 if [[ -z "${min}" ]]; then min=200; fi
+if [[ -z "${threads}" ]]; then threads=4; fi
 
 ##################################################################################
 ##################################################################################
@@ -59,16 +62,16 @@ prefix=$(basename ${reads} .gz | sed 's/\.fasta\?//g; s/\.fastq\?//g; s/\.fa\?//
 
 # Perform the mapping
 if [[ -z "${max}" ]]; then
-    seqkit seq --min-len ${min} ${reads} | minimap2 -ax map-ont -t $SLURM_CPUS_PER_TASK --secondary=no population.pool.fasta - | samtools sort -O BAM - > ${prefix}.bam
-    samtools index -@ $SLURM_CPUS_PER_TASK -b ${prefix}.bam
+    seqkit seq --min-len ${min} ${reads} | minimap2 -ax map-ont -t ${threads} --secondary=no population.pool.fasta - | samtools sort -O BAM - > ${prefix}.bam
+    samtools index -@ ${threads} -b ${prefix}.bam
     samtools idxstats ${prefix}.bam > ${prefix}.idxstats
 	samtools depth ${prefix}.bam > ${prefix}.depth
 	# store a variable of the total number of reads after filtering
     totalReads=$(seqkit seq --min-len ${min} ${reads} | seqkit stats -T - | awk '{print $4}' | sed '1d')
 
 elif [[ ! -z "${max}" ]]; then
-    seqkit seq --min-len $min --max-len $max ${reads} | minimap2 -ax map-ont -t $SLURM_CPUS_PER_TASK --secondary=no population.pool.fasta - | samtools sort -O BAM - > ${prefix}.bam
-    samtools index -@ $SLURM_CPUS_PER_TASK -b ${prefix}.bam
+    seqkit seq --min-len $min --max-len $max ${reads} | minimap2 -ax map-ont -t ${threads} --secondary=no population.pool.fasta - | samtools sort -O BAM - > ${prefix}.bam
+    samtools index -@ ${threads} -b ${prefix}.bam
     samtools idxstats ${prefix}.bam > ${prefix}.idxstats
 	samtools depth ${prefix}.bam > ${prefix}.depth
 	# store a variable of the total number of reads after filtering
@@ -162,26 +165,26 @@ sed -i -z 's/^/reads\tcontig\ttotal_bases_over_100_coverage\n/1' tmp.ALLstats.li
 ##################################################################################
 
     # Taxonomy of contig population using kaiju
-kaiju -t /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/rvdb/nodes.dmp \
-	-f /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/rvdb/rvdb.fmi \
-		-i population.pool.fasta -z $SLURM_CPUS_PER_TASK -o population.pool.kaiju.rvdb.out
+kaiju -t rvdb/nodes.dmp \
+	-f rvdb/rvdb.fmi \
+		-i population.pool.fasta -z ${threads} -o population.pool.kaiju.rvdb.out
 
 sort -t $'\t' -V -k 2,2 population.pool.kaiju.rvdb.out -o population.pool.kaiju.rvdb.out.sorted
 kaiju-addTaxonNames \
-	-t /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/rvdb/nodes.dmp \
-		-n /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/rvdb/names.dmp \
+	-t rvdb/nodes.dmp \
+		-n rvdb/names.dmp \
 			-i population.pool.kaiju.rvdb.out.sorted \
 				-o population.pool.kaiju.rvdb.names \
 					-r superkingdom,phylum,order,class,family,genus,species
 
-kaiju -t /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/nr_euk/nodes.dmp \
+kaiju -t nr_euk/nodes.dmp \
 	-f /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/nr_euk/nr_euk.fmi \
-		-i population.pool.fasta -z $SLURM_CPUS_PER_TASK -o population.pool.kaiju.nr_euk.out
+		-i population.pool.fasta -z ${threads} -o population.pool.kaiju.nr_euk.out
 
 sort -t $'\t' -V -k 2,2 population.pool.kaiju.nr_euk.out -o population.pool.kaiju.nr_euk.sorted
 kaiju-addTaxonNames \
-	-t /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/rvdb/nodes.dmp \
-		-n /panfs/jay/groups/27/dcschroe/shared/bioinfdb/KAIJU/rvdb/names.dmp \
+	-t rvdb/nodes.dmp \
+		-n rvdb/names.dmp \
 			-i population.pool.kaiju.nr_euk.sorted \
 				-o population.pool.kaiju.nr_euk.names \
 					-r superkingdom,phylum,order,class,family,genus,species
