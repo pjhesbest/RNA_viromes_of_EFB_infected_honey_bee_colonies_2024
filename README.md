@@ -5,4 +5,6 @@ Script and data files relating to the publication:
 ##### <sup>1</sup>Department of Veterinary Population Medicine, University of Minnesota, St. Paul, MN 55108, USA
 ##### <sup>2</sup>Department of Entomology, Michigan State University, Pollinator Performance Center, 4090 N. College Road, RM 100, Lansing, MI 48910, USA
 
-Within this repository you will find scripts to recreate the analyses and figures described in the manuscript. Additionally are the alignment files and tree files, as well as whole-genomes of the honey bee RNA viruses.
+Within this repository, you will find scripts to recreate the analyses and figures described in the manuscript. Additionally are the alignment files and tree files, as well as whole-genomes of the honey bee RNA viruses.
+
+I have attempted to make the bash files general purpose (as long as the dependables are available on your system), but the estimating viral population script requires specific Kaiju databases to be available and the paths modified in the script. 
