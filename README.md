@@ -12,7 +12,7 @@ Within this repository, you will find scripts to recreate the analyses and figur
 I have attempted to make the bash files general purpose (as long as the dependables are available on your system), however, <code>viral-population-estimations_p1.sh</code> requires specific Kaiju databases to be available and the paths modified in the script. Please refer to this repository for instructions on how to build the required databases and conda environments to run these scripts: https://github.com/dmckeow/bioinf
 
 ### Data provided:
-<code>data/ApisM_MM_contigs.metadata.csv</code>:
+<code>data/ApisM_MM_contigs.metadata.csv</code>: Metadata relating to viral metagenome-assembled genomes (vMAG), taxonomy, genome quality (checkV), genome origin, ect.
 <code>data/ApisM_MM_metadata.csv</code>:
 <code>data/ApisM_MM_phylogeny.metadata.csv</code>:
 <code>data/ApisM_MM_read_kaiju_counts.csv</code>:
