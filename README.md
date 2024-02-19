@@ -12,10 +12,10 @@ Within this repository, you will find scripts to recreate the analyses and figur
 I have attempted to make the bash files general purpose (as long as the dependables are available on your system), however, <code>viral-population-estimations_p1.sh</code> requires specific Kaiju databases to be available and the paths modified in the script. Please refer to this repository for instructions on how to build the required databases and conda environments to run these scripts: https://github.com/dmckeow/bioinf
 
 ### Data provided:
--<code>data/ApisM_MM_contigs.metadata.csv</code> : Metadata relating to viral metagenome-assembled genomes (vMAG), taxonomy, genome quality (checkV), genome origin, ect.
--<code>data/ApisM_MM_metadata.csv</code> : Study metadata and Sequence Read Archives (SRA) accession numbers for accessing metagenomic reads.
--<code>data/ApisM_MM_phylogeny.metadata.csv</code> : Metadata relating to genome (publically available and vMAGS generated in this study) used in phylogeny.
--<code>data/ApisM_MM_read_kaiju_counts.csv</code> : Count tables of taxonomic classification of metagenomic reads by Kaiju (NCBI-nr and RVDB)
--<code>data/ApisM_MM_viral-genome-read-recruitment.csv</code> : Count tables of read recruitment to study vMAGs.
--<code>data/ApisM_MM_viral-genome.fasta</code> : Whole-genomes of vMAGs generated in this study, consult <code>data/ApisM_MM_contigs.metadata.csv</code> for relevant metadata.
--<code>data/ApisM_MM_viral-genomes-NCBI.fa</code> : NCBI format of whole-genomes of vMAGs generated in this study, consult <code>data/ApisM_MM_contigs.metadata.csv</code> for relevant metadata.
+- <code>data/ApisM_MM_contigs.metadata.csv</code> : Metadata relating to viral metagenome-assembled genomes (vMAG), taxonomy, genome quality (checkV), genome origin, ect.
+- <code>data/ApisM_MM_metadata.csv</code> : Study metadata and Sequence Read Archives (SRA) accession numbers for accessing metagenomic reads.
+- <code>data/ApisM_MM_phylogeny.metadata.csv</code> : Metadata relating to genome (publically available and vMAGS generated in this study) used in phylogeny.
+- <code>data/ApisM_MM_read_kaiju_counts.csv</code> : Count tables of taxonomic classification of metagenomic reads by Kaiju (NCBI-nr and RVDB)
+- <code>data/ApisM_MM_viral-genome-read-recruitment.csv</code> : Count tables of read recruitment to study vMAGs.
+- <code>data/ApisM_MM_viral-genome.fasta</code> : Whole-genomes of vMAGs generated in this study, consult <code>data/ApisM_MM_contigs.metadata.csv</code> for relevant metadata.
+- <code>data/ApisM_MM_viral-genomes-NCBI.fa</code> : NCBI format of whole-genomes of vMAGs generated in this study, consult <code>data/ApisM_MM_contigs.metadata.csv</code> for relevant metadata.
