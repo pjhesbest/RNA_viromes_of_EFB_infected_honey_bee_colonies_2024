@@ -17,5 +17,5 @@ I have attempted to make the bash files general purpose (as long as the dependab
 - <code>data/ApisM_MM_phylogeny.metadata.csv</code> : Metadata relating to genome (publically available and vMAGS generated in this study) used in phylogeny.
 - <code>data/ApisM_MM_read_kaiju_counts.csv</code> : Count tables of taxonomic classification of metagenomic reads by Kaiju (NCBI-nr and RVDB)
 - <code>data/ApisM_MM_viral-genome-read-recruitment.csv</code> : Count tables of read recruitment to study vMAGs.
-- <code>data/ApisM_MM_viral-genome.fasta</code> : Whole-genomes of vMAGs generated in this study, consult <code>data/ApisM_MM_contigs.metadata.csv</code> for relevant metadata.
-- <code>data/ApisM_MM_viral-genomes-NCBI.fa</code> : NCBI format of whole-genomes of vMAGs generated in this study, consult <code>data/ApisM_MM_contigs.metadata.csv</code> for relevant metadata.
+- <code>data/ApisM_MM_viral-genome.fasta</code> : Whole-genomes of vMAGs generated in this study, consult contig metadata for additional information.
+- <code>data/ApisM_MM_viral-genomes-NCBI.fa</code> : NCBI format of whole-genomes of vMAGs generated in this study, consult contig metadata for additional information.
