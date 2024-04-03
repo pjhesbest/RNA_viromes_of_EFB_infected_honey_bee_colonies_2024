@@ -8,7 +8,7 @@
 ##################################################################################################
 ##############################################################################################
 
-echo -e "\e[34mCOMMAND LINE JOB SUBMISSSION:\n\tsbatch /home/dcschroe/heske011/codebase/iq-tree_phylogeny.sh $@\e[0m\n\nArguments:"
+echo -e "\e[34mCOMMAND LINE JOB SUBMISSSION:\n\tbash iq-tree_phylogeny.sh $@\e[0m\n\nArguments:"
 
 Help()  
 {
